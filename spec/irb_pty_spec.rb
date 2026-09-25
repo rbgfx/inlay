@@ -5,10 +5,10 @@ require "rbconfig"
 require "timeout"
 
 RSpec.describe "IRB terminal integration" do
-  def read_until(reader, writer, output, expected)
-    queries = 0
+  def read_until(reader, writer, output, expected, occurrences: 1)
+    queries = output.scan("\e[6n").length
     Timeout.timeout(10) do
-      until output.include?(expected)
+      until output.scan(Regexp.new(Regexp.escape(expected))).length >= occurrences
         output << reader.readpartial(4096)
         count = output.scan("\e[6n").length
         if count > queries
@@ -31,8 +31,10 @@ RSpec.describe "IRB terminal integration" do
     PTY.spawn({ "TERM" => "xterm-kitty", "TERMVAS_PROTOCOL" => "kitty", "IRBRC" => rc.path }, *command) do |reader, writer, pid|
       reader.winsize = [24, 80]
       read_until(reader, writer, output, "irb(main):001>")
-      writer.puts('Tessel::Image.from_rgba(1, 1, [255, 0, 0, 255].pack("C*"))')
+      writer.puts('image = Tessel::Image.from_rgba(1, 1, [255, 0, 0, 255].pack("C*"))')
       read_until(reader, writer, output, "#<Tessel::Image 1x1>")
+      writer.puts("image")
+      read_until(reader, writer, output, "#<Tessel::Image 1x1>", occurrences: 2)
       writer.puts("exit")
       begin
         loop { output << reader.readpartial(4096) }

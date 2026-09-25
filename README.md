@@ -31,6 +31,20 @@ Pry uses the same integration style:
 require "inlay/pry"
 ```
 
+## Use in IRuby / Jupyter
+
+Install [IRuby](https://github.com/SciRuby/iruby) 0.8 or newer, then require Inlay after the optional graphics gems you use:
+
+```ruby
+require "inkplot" # optional: charts
+require "inlay/iruby"
+
+Tessel.read("brick.png")
+Inkplot.line(prices, x: :date, y: :close) # when Inkplot is installed
+```
+
+IRuby provides PNG for images and both SVG and PNG for charts, with SVG listed first. Animations use an installed Flipbook to produce a GIF data URI; if Flipbook is unavailable, Inlay displays the first frame as PNG. These integrations are opt-in and do not load IRuby, Inkplot, or Flipbook when you only `require "inlay"`.
+
 Inlay uses the terminal protocol selected by Termvas: Kitty, iTerm2, Sixel, or true-color half blocks. Piped output, `TERM=dumb`, `INLAY=off`, and `NO_COLOR` with half blocks show only the summary.
 
 ## Use in a script
@@ -61,6 +75,8 @@ Inlay.register(MySurface) { |surface| surface.to_tessel_image }
 bundle install
 bundle exec rake verify
 ```
+
+Run `bundle exec rbs -I sig validate` to check the published signatures. The manual terminal and notebook checklist is in [docs/manual-checks.md](docs/manual-checks.md).
 
 ## License
 

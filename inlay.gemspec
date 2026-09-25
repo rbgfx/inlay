@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["t.yudai92@gmail.com"]
 
   spec.summary = "Display Ruby graphics in terminals and REPLs"
-  spec.description = "Render Tessel images and graphics buffers in terminals, IRB, and Pry."
+  spec.description = "Render Tessel images, graphics buffers, charts, and animations in terminals, IRB, Pry, and IRuby."
   spec.homepage = "https://github.com/rbgfx/inlay"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
@@ -36,9 +36,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.add_dependency "tessel", ">= 0.2.0", "< 1"
   spec.add_dependency "termvas", ">= 0.2.0", "< 1"
-  spec.add_dependency "base64"
-  spec.add_development_dependency "irb", ">= 1.13"
-  spec.add_development_dependency "pry"
+  spec.add_dependency "base64", ">= 0.2", "< 1"
+  spec.add_development_dependency "irb", ">= 1.13", "< 2"
+  spec.add_development_dependency "iruby", ">= 0.8", "< 1"
+  spec.add_development_dependency "pry", ">= 0", "< 1"
   spec.add_development_dependency "rspec", "~> 3.0"
 
   # Uncomment to register a new dependency of your gem

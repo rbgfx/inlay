@@ -17,13 +17,21 @@ module Inlay
   end
 
   def self.config: () -> Config
-  def self.register: (Module klass) { (untyped object) -> untyped } -> Module
+  def self.register: (Module klass) { (untyped object) -> untyped } -> untyped
   def self.normalize: (untyped object, ?allow_path: bool) -> Normalized
   def self.displayable?: (untyped object) -> bool
   def self.protocol: () -> Symbol
   def self.show: (untyped object, ?width: Integer?, ?height: Integer?, ?scale: Symbol, ?protocol: Symbol?) -> String
   def self.irb_install!: () -> bool
   def self.irb_uninstall!: () -> (bool | nil)
+end
+
+module Inlay::IRubyIntegration
+  def self.install: () -> bool
+  def self.html: (untyped object) -> String?
+  def self.svg: (untyped object) -> String?
+  def self.png: (untyped object) -> String?
+  def self.mimebundle: (untyped object, ?include: Array[String]) -> [Hash[String, String], Hash[untyped, untyped]]
 end
 
 module Kernel

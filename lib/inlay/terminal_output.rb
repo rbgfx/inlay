@@ -5,10 +5,7 @@ module Inlay
     module_function
 
     def protocol(output: $stdout, env: ENV)
-      return :none unless Inlay.config.enabled
-      return :none unless output.tty?
-      return :none unless env["INLAY"] != "off"
-      return :none if env["TERM"] == "dumb"
+      return :none unless enabled?(output: output, env: env)
 
       selected = Termvas::Detector.protocol(env)
       return :none if selected == :blocks && env.key?("NO_COLOR")
@@ -18,7 +15,7 @@ module Inlay
 
     def write(image, width: nil, height: nil, scale: :auto, protocol: nil, output: $stdout, env: ENV)
       selected = (protocol || self.protocol(output: output, env: env)).to_sym
-      return false unless Inlay.config.enabled && output.tty? && selected != :none
+      return false unless enabled?(output: output, env: env) && selected != :none
       return false if selected == :blocks && env.key?("NO_COLOR")
       return false if image.width * image.height > Inlay.config.max_pixels
 
@@ -37,6 +34,11 @@ module Inlay
       output.write("\n")
       true
     end
+
+    def enabled?(output:, env:)
+      Inlay.config.enabled && output.tty? && env["INLAY"] != "off" && env["TERM"] != "dumb"
+    end
+    private_class_method :enabled?
 
     def next_kitty_id
       @kitty_id_lock ||= Mutex.new

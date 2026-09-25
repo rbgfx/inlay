@@ -13,6 +13,13 @@ RSpec.describe Inlay do
     expect(described_class.normalize(value).png.call).to equal(image)
   end
 
+  it "normalizes PNG byte strings" do
+    png = Tessel::PNG.encode(image)
+
+    expect(described_class.normalize({ png: png }).png).to equal(png)
+    expect(Inlay::Normalizer.terminal_image(described_class.normalize({ png: png })).bytes).to eq(image.bytes)
+  end
+
   it "rejects recursive or malformed animation protocols" do
     recursive = Object.new
     recursive.define_singleton_method(:to_inlay) { recursive }
@@ -40,6 +47,9 @@ RSpec.describe Inlay do
     expect([fitted.width, fitted.height]).to eq([1, 1])
     expect(fitted.bytes.bytes).to eq([128, 0, 128, 255])
     expect(Inlay::Sizer.fit(image, width: 8, height: 8, scale: :pixel).width).to eq(8)
+    expect(Inlay::Sizer.fit(image, width: 8, height: 8).width).to eq(8)
+    tall_image = Tessel::Image.from_rgba(1, 100, ([0, 0, 0, 255] * 100).pack("C*"))
+    expect(Inlay::Sizer.fit(tall_image, width: 100, height: 100).height).to be <= Inlay.config.max_rows * 2
   end
 
   it "writes through the selected Termvas encoder only to a TTY" do
@@ -47,24 +57,90 @@ RSpec.describe Inlay do
 
     expect(Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :blocks, output: output, env: {})).to be(true)
     expect(output.string).to include("▀")
+    expect(output.string).to end_with("\n")
     expect(Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :blocks, output: StringIO.new, env: {})).to be(false)
+    expect(Inlay::TerminalOutput.protocol(output: output, env: { "TERM" => "dumb" })).to eq(:none)
+    expect(Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :blocks, output: output, env: { "NO_COLOR" => "1" })).to be(false)
+    expect(Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :blocks, output: output, env: { "INLAY" => "off" })).to be(false)
+  end
+
+  it "supports each Termvas image encoder" do
+    %i[blocks kitty iterm2 sixel].each do |protocol|
+      output = Class.new(StringIO) { def tty? = true }.new
+      expect(Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: protocol, output: output, env: {})).to be(true)
+    end
+  end
+
+  it "honors the enabled flag and maximum pixel limit" do
+    output = Class.new(StringIO) { def tty? = true }.new
+    enabled = Inlay.config.enabled
+    max_pixels = Inlay.config.max_pixels
+
+    Inlay.config.enabled = false
+    expect(Inlay::TerminalOutput.write(image, protocol: :blocks, output: output, env: {})).to be(false)
+    Inlay.config.enabled = true
+    Inlay.config.max_pixels = 1
+    expect(Inlay::TerminalOutput.write(image, protocol: :blocks, output: output, env: {})).to be(false)
+  ensure
+    Inlay.config.enabled = enabled
+    Inlay.config.max_pixels = max_pixels
   end
 
   it "assigns each Kitty transmission a new image identifier" do
     output = Class.new(StringIO) { def tty? = true }.new
-    2.times { Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :kitty, output: output) }
+    2.times { Inlay::TerminalOutput.write(image, width: 2, height: 1, protocol: :kitty, output: output, env: {}) }
 
     expect(output.string.scan(/i=(\d+)/).flatten.uniq.length).to eq(2)
   end
 
   it "shows a concise result when output is piped" do
     expect(described_class.show(image)).to eq("#<Tessel::Image 2x1>")
+    expect(described_class.show({ frames: [image, image], fps: 12 })).to eq("#<Hash 2x1 frames=2>")
+  end
+
+  it "sends the first animation frame to the terminal and summarizes all frames" do
+    allow(Inlay::TerminalOutput).to receive(:write) do |frame, **options|
+      expect(frame).to equal(image)
+      expect(options[:protocol]).to eq(:kitty)
+      true
+    end
+
+    expect(Inlay.show({ frames: [image, image], fps: 12 }, protocol: :kitty)).to eq("#<Hash 2x1 frames=2>")
+  end
+
+  it "provides the optional Kernel helper" do
+    require "inlay/kernel"
+
+    expect(inlay(image)).to eq("#<Tessel::Image 2x1>")
+  end
+
+  it "adapts optional RBGL buffers only when their classes are loaded" do
+    engine = Module.new
+    framebuffer_class = Class.new do
+      def width = 1
+      def height = 1
+      def to_rgba_bytes = [1, 2, 3, 4].pack("C*")
+    end
+    color_class = Struct.new(:r, :g, :b, :a)
+    texture_class = Class.new do
+      define_method(:width) { 1 }
+      define_method(:height) { 1 }
+      define_method(:data) { [color_class.new(5, 6, 7, 8)] }
+    end
+    stub_const("RBGL", Module.new)
+    stub_const("RBGL::Engine", engine)
+    stub_const("RBGL::Engine::Framebuffer", framebuffer_class)
+    stub_const("RBGL::Engine::Texture", texture_class)
+
+    expect(described_class.normalize(framebuffer_class.new).image.bytes.bytes).to eq([1, 2, 3, 4])
+    expect(described_class.normalize(texture_class.new).image.bytes.bytes).to eq([5, 6, 7, 8])
   end
 
   it "registers user adapters" do
     klass = Class.new
-    described_class.register(klass) { image }
+    adapter = proc { image }
 
+    described_class.register(klass, &adapter)
     expect(described_class.normalize(klass.new).image).to equal(image)
   end
 
@@ -79,6 +155,24 @@ RSpec.describe Inlay do
     expect(result).to equal(output)
     expect { described_class.irb_uninstall! }.to change { IRB.conf[:INSPECT_MODE] }.to(original)
     described_class.irb_install!
+    expect(described_class.irb_install!).to be(true)
+  end
+
+  it "caches the terminal protocol when the IRB integration is installed" do
+    require "inlay/irb"
+    allow(Inlay::TerminalOutput).to receive(:protocol).and_return(:kitty)
+    described_class.irb_install!
+    selected = nil
+    allow(Inlay::TerminalOutput).to receive(:write) do |_image, **options|
+      selected = options[:protocol]
+      false
+    end
+
+    Inlay::IRBIntegration.wrapper.inspect_value(image, StringIO.new)
+
+    expect(selected).to eq(:kitty)
+  ensure
+    described_class.irb_install! if defined?(IRB)
   end
 
   it "passes Pry's configured printer a rendered summary" do

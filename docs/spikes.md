@@ -1,8 +1,8 @@
 # Integration spikes
 
-- IRB 1.18's `IRB::Inspector` supports a streaming inspector that writes into IRB's result buffer. Inlay writes terminal escapes to `$stdout` separately and leaves a short summary in the buffer. IRB paging and assignment truncation therefore only see the summary. The supported minimum is IRB 1.13, the first version with the supported inspector API.
-- `.irbrc` runs before the first prompt, so environment-based terminal detection can be cached at install time without competing with Reline input. Inlay does not issue device queries.
-- Rails console uses IRB's configured inspector when initialized after `.irbrc`; re-running `Inlay.irb_install!` wraps a subsequently selected inspector. Rails itself is not part of the test dependency set.
-- Pry's configured printer receives `(output, value, pry_instance)`; the adapter retains that printer and passes it the summary.
-- IRuby's public display registry supports predicate matchers and dynamic MIME pairs. SVG is preferred; PNG and GIF-in-HTML are selected from the normalized return value.
+- Verified with IRB 1.18 in a PTY: Inlay's inspector writes the Kitty image sequence directly and leaves the one-line summary in IRB's result buffer. Both an assignment and a later expression display correctly, and the following prompt remains usable. The supported minimum is IRB 1.13, which provides the inspector API used here.
+- Terminal protocol selection uses Termvas environment detection during `require "inlay/irb"`; Inlay does not send device queries. The PTY session shows Reline's own cursor-position queries, which the test answers. Long-output pager behavior has not been manually checked.
+- Rails console has not been tested because this repository has no Rails application or Rails test dependency. `Inlay.irb_install!` can re-wrap the active inspector; the actual Rails startup path remains a manual check.
+- Pry's configured printer receives `(output, value, pry_instance)`; the adapter retains that printer and passes it the summary. The configured printer path is covered by a spec.
+- IRuby 0.8.3's display registry supports predicate matchers and MIME-specific renderers. Registry specs verify PNG, SVG, and HTML GIF output; a local integration check against Flipbook also produced a GIF data URI. JupyterLab frontend rendering has not been manually checked.
 - `@ruby/3.4-wasm-wasi` 2.10.1 / Ruby 3.4.1 with Larb and JS host bindings completed 3,600 simulated 60 fps callbacks in 61.95 seconds. With one stable JS trampoline and Ruby/JS GC every 600 frames, WASM memory changed from 71,499,776 to 71,565,312 bytes; JS heap grew 4,261,280 bytes. This validates the callback strategy under Node, not a browser or GPU workload.
