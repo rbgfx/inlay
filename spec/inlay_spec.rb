@@ -97,14 +97,4 @@ RSpec.describe Inlay do
     Pry.config.print = old_printer if defined?(Pry) && old_printer
   end
 
-  it "renders images, SVG, and animations through IRuby's MIME registry" do
-    require "inlay/iruby"
-    svg = Object.new
-    svg.define_singleton_method(:to_inlay) { { svg: "<svg></svg>" } }
-
-    expect(IRuby::Display.display(image)["image/png"]).to start_with("iVBOR")
-    expect(IRuby::Display.display(svg)["image/svg+xml"]).to eq("<svg></svg>")
-    animation = { frames: [image, image], fps: 12 }
-    expect(IRuby::Display.display(animation)["text/html"]).to include("data:image/gif;base64,")
-  end
 end

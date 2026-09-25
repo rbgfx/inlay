@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Yudai Takada"]
   spec.email = ["t.yudai92@gmail.com"]
 
-  spec.summary = "Display Ruby graphics in terminals and notebooks"
-  spec.description = "Render Tessel images, graphics buffers, and chart output in IRB, Pry, and IRuby."
+  spec.summary = "Display Ruby graphics in terminals and REPLs"
+  spec.description = "Render Tessel images and graphics buffers in terminals, IRB, and Pry."
   spec.homepage = "https://github.com/rbgfx/inlay"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
@@ -38,8 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "termvas", ">= 0.2.0", "< 1"
   spec.add_dependency "base64"
   spec.add_development_dependency "irb", ">= 1.13"
-  spec.add_development_dependency "iruby"
-  spec.add_development_dependency "flipbook"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rspec", "~> 3.0"
 

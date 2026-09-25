@@ -1,6 +1,6 @@
 # Inlay
 
-Render Ruby graphics where you inspect them. Inlay shows Tessel images, RBGL surfaces, and chart output in IRB, Pry, and IRuby, using terminal graphics protocols or notebook MIME output.
+Render Ruby graphics where you inspect them. Inlay shows Tessel images, RBGL surfaces, and chart output in terminals, IRB, and Pry.
 
 ## Install
 
@@ -8,7 +8,7 @@ Render Ruby graphics where you inspect them. Inlay shows Tessel images, RBGL sur
 gem install inlay
 ```
 
-Add `inlay` to your Gemfile. Inlay uses [Tessel](https://github.com/rbgfx/tessel) for images and [Termvas](https://github.com/rbgfx/termvas) for terminal output. Flipbook adds animated GIF display in IRuby.
+Add `inlay` to your Gemfile. Inlay uses [Tessel](https://github.com/rbgfx/tessel) for images and [Termvas](https://github.com/rbgfx/termvas) for terminal output.
 
 ## Use in IRB
 
@@ -50,14 +50,6 @@ Objects can implement `to_inlay` and return a `Tessel::Image`, `{ png: bytes }`,
 ```ruby
 Inlay.register(MySurface) { |surface| surface.to_tessel_image }
 ```
-
-## Use in IRuby
-
-```ruby
-require "inlay/iruby"
-```
-
-Images are returned as PNG, SVG output as SVG, and animations as an embedded GIF when Flipbook is installed. Without Flipbook, an animation displays its first frame.
 
 ## Configuration
 
