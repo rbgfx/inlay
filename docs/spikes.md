@@ -1,7 +1,7 @@
 # Integration spikes
 
 - Verified with IRB 1.18 in a PTY: Inlay's inspector writes the Kitty image sequence directly and leaves the one-line summary in IRB's result buffer. Both an assignment and a later expression display correctly, and the following prompt remains usable. The supported minimum is IRB 1.13, which provides the inspector API used here.
-- Terminal protocol selection uses Termvas environment detection during `require "inlay/irb"`; Inlay does not send device queries. The PTY session shows Reline's own cursor-position queries, which the test answers. Long-output pager behavior has not been manually checked.
+- Terminal protocol selection uses Termvas environment detection during `require "inlay/irb"`; Inlay does not send device queries. The PTY test forces IRB's pager through `tee` for a long value, then checks the following Kitty image sequence and prompt remain intact. Real pager navigation and terminal rendering still need frontend checks.
 - Verified with a temporary Rails 8.1.4 console and project `.irbrc` loading `inlay/irb`: ordinary values and Tessel image assignments keep the prompt usable. This caught and fixed the wrapped Inspector's missing initializer call (`IRB::ColorPrinter` on pretty-print output).
 - Pry's configured printer receives `(output, value, pry_instance)`; the adapter retains that printer and passes it the summary. The configured printer path is covered by a spec.
 - IRuby 0.8.3's display registry supports predicate matchers and MIME-specific renderers. Registry specs verify PNG, SVG, and HTML GIF output; a local integration check against Flipbook also produced a GIF data URI. JupyterLab frontend rendering has not been manually checked.
