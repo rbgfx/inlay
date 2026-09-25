@@ -44,7 +44,7 @@ module Inlay
 
     def png(object)
       png_content(Inlay.normalize(object))
-    rescue StandardError
+    rescue LoadError, StandardError
       nil
     end
 
@@ -84,7 +84,7 @@ module Inlay
         File.binread(file.path)
       end
       "<img alt=\"Animation with #{normalized.frames.length} frames\" src=\"data:image/gif;base64,#{Base64.strict_encode64(gif)}\">"
-    rescue StandardError
+    rescue LoadError, StandardError
       nil
     end
 
@@ -96,7 +96,7 @@ module Inlay
       value = value.call if value.respond_to?(:call)
       return value if value.is_a?(String)
       return Tessel::PNG.encode(value) if value.is_a?(Tessel::Image)
-    rescue StandardError
+    rescue LoadError, StandardError
       nil
     end
     private_class_method :animation_html, :png_content

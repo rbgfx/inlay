@@ -4,6 +4,7 @@
 
 - Add opt-in IRuby renderers for PNG, SVG charts, and Flipbook animations with a first-frame fallback.
 - Fit terminal images to protocol-specific dimensions and configurable cell-size estimates.
+- Preserve SVG chart output when optional PNG dependencies are unavailable.
 - Add IRuby registry coverage and update the integration documentation and signatures.
 
 ## [0.1.0] - 2026-09-25

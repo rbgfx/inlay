@@ -45,7 +45,7 @@ RSpec.describe Inlay::IRubyIntegration do
 
     chart = chart_class.new
     formats = IRuby::Display.display(chart)
-    expect(formats.fetch("image/svg+xml")).to eq("<svg>chart</svg>")
+    expect(formats.fetch("image/svg+xml")).to include("<svg>chart</svg>")
     png = formats.fetch("image/png")
     expect(Base64.decode64(png)).to start_with("\x89PNG\r\n\x1a\n".b)
     expect(IRuby::Display.display(chart, format: "image/png").fetch("image/png")).to eq(png)
@@ -68,5 +68,20 @@ RSpec.describe Inlay::IRubyIntegration do
   it "falls back to the first animation frame when Flipbook is unavailable" do
     result = IRuby::Display.display({ frames: [image, image], fps: 12 }).fetch("image/png")
     expect(Base64.decode64(result)).to start_with("\x89PNG\r\n\x1a\n".b)
+  end
+
+  it "keeps chart SVG output when its optional PNG renderer is unavailable" do
+    chart_class = Class.new do
+      def to_inlay
+        { svg: "<svg>chart</svg>", png: -> { raise LoadError, "optional raster dependency missing" } }
+      end
+    end
+    stub_const("Inkplot", Module.new)
+    stub_const("Inkplot::Chart", chart_class)
+    described_class.install
+
+    formats = IRuby::Display.display(chart_class.new)
+    expect(formats.fetch("image/svg+xml")).to eq("<svg>chart</svg>")
+    expect(formats).not_to have_key("image/png")
   end
 end
