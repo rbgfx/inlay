@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.2.1] - Unreleased
+## [0.2.1] - 2026-09-25
 
 - Fit terminal images to protocol-specific cell dimensions.
 - Preserve SVG chart output when optional PNG dependencies are unavailable.
