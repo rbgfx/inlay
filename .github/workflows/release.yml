@@ -27,6 +27,10 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
           persist-credentials: false
+      - name: Resolve release checks from RubyGems
+        run: |
+          sed -i -E 's/, github: "[^"]+", ref: "[^"]+"//' Gemfile
+          rm -f Gemfile.lock
       - name: Set up Ruby
         uses: ruby/setup-ruby@984c0c890880bbf811283d6f09c4607c62d210a4 # v1.323.0
         with:
