@@ -14,7 +14,10 @@ module Inlay
         selected = mode.is_a?(IRB::Inspector) ? mode : IRB::Inspector::INSPECTORS[mode] || IRB::Inspector::INSPECTORS[mode.to_s] || IRB::Inspector::INSPECTORS[:p]
         return false unless selected
 
-        @original = selected unless mode.equal?(@wrapper)
+        unless mode.equal?(@wrapper)
+          @original = selected
+          @original.init
+        end
         @protocol = TerminalOutput.protocol
         @wrapper = IRB::Inspector.new(proc do |value, output, colorize: true|
           begin

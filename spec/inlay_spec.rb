@@ -172,6 +172,22 @@ RSpec.describe Inlay do
     expect(described_class.irb_install!).to be(true)
   end
 
+  it "runs the wrapped inspector initializer" do
+    require "inlay/irb"
+    previous = Inlay::IRBIntegration.original
+    initialized = false
+    original = IRB::Inspector.new(proc { |value| value.inspect }, proc { initialized = true })
+    IRB.conf[:INSPECT_MODE] = original
+
+    described_class.irb_install!
+
+    expect(initialized).to be(true)
+  ensure
+    Inlay::IRBIntegration.uninstall
+    IRB.conf[:INSPECT_MODE] = previous
+    described_class.irb_install!
+  end
+
   it "caches the terminal protocol when the IRB integration is installed" do
     require "inlay/irb"
     allow(Inlay::TerminalOutput).to receive(:protocol).and_return(:kitty)
