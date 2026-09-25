@@ -1,7 +1,5 @@
 # Changelog
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-09-25
 
-- Add terminal image output and explicit `Inlay.show` API.
-- Add `to_inlay` normalization and custom adapters.
-- Integrate image output with IRB and Pry.
+Initial release
