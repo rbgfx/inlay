@@ -1,17 +1,3 @@
-GIT
-  remote: https://github.com/rbgfx/termvas.git
-  revision: 300b926257747cc395366a00aecf8e7ebc84a733
-  ref: 300b926257747cc395366a00aecf8e7ebc84a733
-  specs:
-    termvas (0.3.0)
-
-GIT
-  remote: https://github.com/rbgfx/tessel.git
-  revision: 60c355d80ba415515289e3ff39bd002677b19f03
-  ref: 60c355d
-  specs:
-    tessel (0.2.0)
-
 PATH
   remote: .
   specs:
@@ -94,6 +80,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
+    termvas (0.3.0)
+    tessel (0.2.0)
     tsort (0.2.0)
 
 PLATFORMS
@@ -117,8 +105,6 @@ DEPENDENCIES
   rake (~> 13.0)
   rbs (< 4.2)
   rspec (~> 3.0)
-  termvas!
-  tessel!
 
 CHECKSUMS
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
@@ -161,8 +147,8 @@ CHECKSUMS
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
   rspec-support (3.13.7) sha256=0640e5570872aafefd79867901deeeeb40b0c9875a36b983d85f54fb7381c47c
-  termvas (0.3.0)
-  tessel (0.2.0)
+  termvas (0.3.0) sha256=bc4c8b2ae0c9aad34e0ad96265c60dc6aaf0b89f4ee857d0e7cb6156df68db78
+  tessel (0.2.0) sha256=9f7ffc113876262198007e461da1f4010ed0ccff722a0a483297577c09585b6a
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
 
 BUNDLED WITH
