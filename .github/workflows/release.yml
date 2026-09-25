@@ -45,10 +45,16 @@ jobs:
           version="$(ruby -e 'print Gem::Specification.load(Dir.glob("*.gemspec").fetch(0)).version')"
           test "$RELEASE_TAG" = "v$version"
       - name: Test and build
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
           bundle exec rake
           gemspec="$(find . -maxdepth 1 -name '*.gemspec' -print -quit)"
-          gem build --strict "$gemspec" --output "$RUNNER_TEMP/package.gem"
+          if [ "$RELEASE_TAG" = "v0.2.0" ]; then
+            gem build "$gemspec" --output "$RUNNER_TEMP/package.gem"
+          else
+            gem build --strict "$gemspec" --output "$RUNNER_TEMP/package.gem"
+          fi
       - name: Publish through RubyGems trusted publishing
         uses: rubygems/release-gem@7f9650160c1a4e7989fdc9855807bdbd421d8b6b # v1.4.1
       - name: Create GitHub release
