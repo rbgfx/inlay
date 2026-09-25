@@ -15,7 +15,7 @@ GIT
 PATH
   remote: .
   specs:
-    inlay (0.2.0)
+    inlay (0.2.1)
       base64 (>= 0.2, < 1)
       termvas (>= 0.3.0, < 1)
       tessel (>= 0.2.0, < 1)
@@ -140,7 +140,7 @@ CHECKSUMS
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   ffi-rzmq (2.0.7) sha256=2feb3bc5bf46df633e2211514ac408521df0c198f54134fdb38322675d9f4591
   ffi-rzmq-core (1.0.7) sha256=6541625a0f80016e4cb1b22a68b3870bd711c30de7d77625d8d6c92be95eb32a
-  inlay (0.2.0)
+  inlay (0.2.1)
   io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   iruby (0.8.3) sha256=a6e8a05716e2ed097443291f1cd61cbbc8925bf0dbc7b88896ded83fbde00d8f

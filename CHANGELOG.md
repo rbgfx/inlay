@@ -1,11 +1,14 @@
 # Changelog
 
-## [0.2.0] - Unreleased
+## [0.2.1] - Unreleased
 
-- Add opt-in IRuby renderers for PNG, SVG charts, and Flipbook animations with a first-frame fallback.
-- Fit terminal images to protocol-specific dimensions and configurable cell-size estimates.
+- Fit terminal images to protocol-specific cell dimensions.
 - Preserve SVG chart output when optional PNG dependencies are unavailable.
-- Add IRuby registry coverage and update the integration documentation and signatures.
+
+## [0.2.0] - 2026-09-25
+
+- Add terminal image output, `Inlay.show`, normalization, and custom adapters.
+- Integrate image display with IRB, Pry, and IRuby, including SVG, PNG, and animated GIF notebook output.
 
 ## [0.1.0] - 2026-09-25
 
