@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/rbgfx/termvas.git
-  revision: 452b74d7a2f1a164d7fef30d5b307fec7a216744
-  ref: 452b74d
+  revision: 300b926257747cc395366a00aecf8e7ebc84a733
+  ref: 300b926257747cc395366a00aecf8e7ebc84a733
   specs:
-    termvas (0.2.0)
+    termvas (0.3.0)
 
 GIT
   remote: https://github.com/rbgfx/tessel.git
@@ -17,7 +17,7 @@ PATH
   specs:
     inlay (0.2.0)
       base64 (>= 0.2, < 1)
-      termvas (>= 0.2.0, < 1)
+      termvas (>= 0.3.0, < 1)
       tessel (>= 0.2.0, < 1)
 
 GEM
@@ -161,7 +161,7 @@ CHECKSUMS
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
   rspec-support (3.13.7) sha256=0640e5570872aafefd79867901deeeeb40b0c9875a36b983d85f54fb7381c47c
-  termvas (0.2.0)
+  termvas (0.3.0)
   tessel (0.2.0)
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
 

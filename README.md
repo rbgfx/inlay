@@ -45,7 +45,7 @@ Inkplot.line(prices, x: :date, y: :close) # when Inkplot is installed
 
 IRuby provides PNG for images and both SVG and PNG for charts, with SVG listed first. Animations use an installed Flipbook to produce a GIF data URI; if Flipbook is unavailable, Inlay displays the first frame as PNG. These integrations are opt-in and do not load IRuby, Inkplot, or Flipbook when you only `require "inlay"`.
 
-Inlay uses the terminal protocol selected by Termvas: Kitty, iTerm2, Sixel, or true-color half blocks. Piped output, `TERM=dumb`, `INLAY=off`, and `NO_COLOR` with half blocks show only the summary.
+Inlay uses the terminal protocol selected by Termvas: Kitty, iTerm2, Sixel, or true-color half blocks. Image limits use terminal columns and rows; pixel protocols use Termvas cell-size estimates (8 × 16 by default, configurable with `TERMVAS_CELL_WIDTH` and `TERMVAS_CELL_HEIGHT`). Piped output, `TERM=dumb`, `INLAY=off`, and `NO_COLOR` with half blocks show only the summary.
 
 ## Use in a script
 

@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.add_dependency "tessel", ">= 0.2.0", "< 1"
-  spec.add_dependency "termvas", ">= 0.2.0", "< 1"
+  spec.add_dependency "termvas", ">= 0.3.0", "< 1"
   spec.add_dependency "base64", ">= 0.2", "< 1"
   spec.add_development_dependency "irb", ">= 1.13", "< 2"
   spec.add_development_dependency "iruby", ">= 0.8", "< 1"

@@ -52,6 +52,20 @@ RSpec.describe Inlay do
     expect(Inlay::Sizer.fit(tall_image, width: 100, height: 100).height).to be <= Inlay.config.max_rows * 2
   end
 
+  it "fits protocol images to terminal cell dimensions" do
+    large_image = Tessel::Image.from_rgba(100, 100, ([0, 0, 0, 255] * 10_000).pack("C*"))
+    env = { "COLUMNS" => "80", "LINES" => "24", "TERMVAS_CELL_WIDTH" => "10", "TERMVAS_CELL_HEIGHT" => "20" }
+
+    blocks = Inlay::Sizer.fit(large_image, scale: :fit, protocol: :blocks, env: env)
+    kitty = Inlay::Sizer.fit(large_image, scale: :fit, protocol: :kitty, env: env)
+    expect([blocks.width, blocks.height]).to eq([48, 48])
+    expect([kitty.width, kitty.height]).to eq([100, 100])
+
+    oversized_cells = { "COLUMNS" => "80", "LINES" => "24", "TERMVAS_CELL_WIDTH" => "4096", "TERMVAS_CELL_HEIGHT" => "4096" }
+    bounded = Inlay::Sizer.fit(image, scale: :pixel, protocol: :kitty, env: oversized_cells)
+    expect(bounded.width * bounded.height).to be <= Inlay.config.max_pixels
+  end
+
   it "writes through the selected Termvas encoder only to a TTY" do
     output = Class.new(StringIO) { def tty? = true }.new
 

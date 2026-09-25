@@ -19,7 +19,7 @@ module Inlay
       return false if selected == :blocks && env.key?("NO_COLOR")
       return false if image.width * image.height > Inlay.config.max_pixels
 
-      image = Sizer.fit(image, width: width, height: height, scale: scale)
+      image = Sizer.fit(image, width: width, height: height, scale: scale, protocol: selected, env: env)
       bytes = image.bytes
       encoded = case selected.to_sym
       when :blocks then Termvas::Encoders::Blocks.encode(bytes, image.width, image.height)
