@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.2] - 2026-09-26
+
+- Skip empty images in terminal output.
+- Reject non-finite animation frame rates.
+
 ## [0.2.1] - 2026-09-25
 
 - Fit terminal images to protocol-specific cell dimensions.
