@@ -86,6 +86,14 @@ RSpec.describe Inlay do
     end
   end
 
+  it "does not send empty images to terminal encoders" do
+    output = Class.new(StringIO) { def tty? = true }.new
+    empty = Tessel::Image.from_rgba(0, 1, "")
+
+    expect(Inlay::TerminalOutput.write(empty, protocol: :iterm2, output: output, env: {})).to be(false)
+    expect(output.string).to be_empty
+  end
+
   it "honors the enabled flag and maximum pixel limit" do
     output = Class.new(StringIO) { def tty? = true }.new
     enabled = Inlay.config.enabled

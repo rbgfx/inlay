@@ -18,6 +18,7 @@ module Inlay
       return false unless enabled?(output: output, env: env) && selected != :none
       return false if selected == :blocks && env.key?("NO_COLOR")
       return false if image.width * image.height > Inlay.config.max_pixels
+      return false if image.width.zero? || image.height.zero?
 
       image = Sizer.fit(image, width: width, height: height, scale: scale, protocol: selected, env: env)
       bytes = image.bytes
