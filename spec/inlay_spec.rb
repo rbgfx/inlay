@@ -27,6 +27,7 @@ RSpec.describe Inlay do
     expect { described_class.normalize(recursive) }.to raise_error(Inlay::Error, /recursive/)
     expect { described_class.normalize({ frames: [Object.new], fps: 10 }) }.to raise_error(TypeError, /Tessel::Image/)
     expect { described_class.normalize({ frames: [image], fps: 0 }) }.to raise_error(TypeError, /positive/)
+    expect { described_class.normalize({ frames: [image], fps: Float::INFINITY }) }.to raise_error(TypeError, /positive/)
   end
 
   it "does not interpret ordinary strings as paths, even when they exist" do

@@ -45,7 +45,7 @@ module Inlay
         frames = Array(data[:frames])
         raise ArgumentError, "frames must not be empty" if frames.empty?
         raise TypeError, "frames must contain Tessel::Image values" unless frames.all? { |frame| frame.is_a?(Tessel::Image) }
-        raise TypeError, "fps must be a positive number" unless data[:fps].is_a?(Numeric) && data[:fps].positive?
+        raise TypeError, "fps must be a finite positive number" unless data[:fps].is_a?(Numeric) && data[:fps].respond_to?(:positive?) && data[:fps].positive? && data[:fps].to_f.finite?
 
         return Normalized.new(frames: frames, fps: data[:fps])
       end
